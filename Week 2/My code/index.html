@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="assets/js/jquery.js"></script>
+<script src="miserables.json"></script>
+<script src="assets/js/paper.js"></script>
+
+<style>
+node {
+	display: inline-block;
+	width:16px;
+	height: 16px;
+	border-radius: 16px;
+
+}
+</style>
+
+</head>
+<body>
+	<canvas id="dataCanva" style="width:100%;height:100%"></canvas>
+	<script>
+	var colors = [[152,223,138],
+	[31,119,180],
+	[174,199,232],
+	[255,127,14],
+	[255,187,120],
+	[44,160,44],
+	[214,39,40],
+	[255,152,150],
+	[148,103,189],
+	[140,86,75],
+	[96,125,139]];
+
+	function point(a,b)
+		{
+			return new paper.Point(a,b).add(anchor);
+		}
+
+	function color(id) {
+			return new paper.Color(colors[id][0]/255,colors[id][1]/255,colors[id][2]/255);
+		}
+	var anchor = new paper.Point(300,100);
+	var canvas = document.getElementById('dataCanva');
+	paper.setup(canvas);
+	var dotLayer = new paper.Layer();
+	var lineLayer = new paper.Layer();
+	var nodes = new Object;
+
+	data.nodes.map((a) => {
+			nodes[a.id] = {name:a.id,group:a.group};
+			drawDot(nodes[a.id],point(0,0));
+		});
+		
+	data.links.map((a) => {
+			var path = new paper.Path();
+			path.strokeColor = new paper.Color(0.5,0.5,0.5,0.5);
+			path.source = a.source;
+			path.target = a.target;
+			path.strokeWidth = Math.sqrt(a.value);
+			lineLayer.addChild(path);
+		});
+	dotLayer.moveAbove(lineLayer);
+	check();
+	function drawDot(dot,_point)
+			{
+				var path = new paper.Path.Circle(
+					{
+						center: point(300*Math.random(),10*dot.group+300*Math.random()),
+						radius:5,
+						strokeColor:'white'
+					});
+				path.fillColor = color(dot.group);
+				path.strokeWidth = 2;
+				dotLayer.addChild(path);
+				path.onDrag = false;
+				path.onMouseDrag = function(event) {
+					path.onDrag = true;
+				    path.position = event.point; 
+				}
+				dot.dot = path;
+		}
+
+		function check() {
+			
+				var pos = {};
+				var forces = {};
+				for(var index in nodes)
+				{
+					pos[index] = nodes[index].dot.position;
+					forces[index] = new paper.Point(0,0);
+				}
+
+				for(var i in nodes)
+				{
+					for(var n in nodes)
+					{
+						var force = 3;
+
+						var distance = nodes[i].dot.position.subtract(nodes[n].dot.position);
+						if (distance.length <= 200)
+						{
+							if (distance.length == 0) distance.length =1;
+						distance.length = force / Math.sqrt(distance.length*distance.length/1000);
+						forces[i] = forces[i].add(distance);
+						forces[n] = forces[n].subtract(distance);
+						}
+						
+					}
+				}
+
+				data.links.map((a) => {
+					var distance = nodes[a.source].dot.position.subtract(nodes[a.target].dot.position);
+					var expect = (10-a.value * 0.2) * Math.log(distance.length/10);
+					if (distance.length == 0) distance.length =1;
+					distance.length = expect;
+					forces[a.source] = forces[a.source].subtract(distance);
+					forces[a.target] = forces[a.target].add(distance);
+				});
+
+				for (var i in forces) {
+					nodes[i].dot.position = nodes[i].dot.position.add(forces[i].divide(nodes[i].dot.onDrag ? 100000 : 5));
+					nodes[i].dot.onDrag = false;
+				};
+
+				lineLayer.children.map((a)=>{
+					a.removeSegments();
+					a.addSegments([nodes[a.source].dot.position,nodes[a.target].dot.position]);
+				});
+				
+				paper.view.draw();
+				setTimeout(function() {check()},10);
+			}
+	</script>
+<script type="text/javascript">
+</script>
+</body>
+</html>

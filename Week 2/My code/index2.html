@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<svg id = "svgContainer" width="1500" height="1000"></svg>
+
+<script src="assets/js/jquery.js"></script>
+<script src="miserables.json"></script>
+
+<script>
+  var container = document.getElementById("svgContainer");
+  var mySvg = document.createElementNS('http://www.w3.org/2000/svg','svg'); 
+    mySvg.setAttribute("height",'100%'); 
+    mySvg.setAttribute("width",'100%'); 
+    container.appendChild(mySvg);
+
+  var color = ["#1f77b4", "#98df8a", "#aec7e8", "#ffbb78", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#c5b0d5", "#ff9896", "#8c564b"];
+
+  var point = new Array();
+
+  var line = new Array();
+
+  var positionx = new Array();
+
+  var positiony = new Array();
+
+  function posx() {
+    return parseInt(Math.random() * 100 + 430);
+  }
+
+  function posy() {
+    return parseInt(Math.random() * 100 + 250);
+  }
+
+  function clr(p) {
+    return color[data.nodes[p].group];
+  }
+
+  function newposx(dx) {
+    return parseFloat(parseFloat(positionx[idp]) + parseFloat(dx));
+  }
+
+  function newposy(dy) {
+    return parseFloat(parseFloat(positiony[idp]) + parseFloat(dy));
+  }
+
+for (var i = 0; i < data.nodes.length; i++){
+  point[i] = document.createElementNS("http://www.w3.org/2000/svg", "circle");  
+  point[i].setAttribute("cx", posx()); 
+  positionx[data.nodes[i].id] = point[i].getAttribute("cx"); 
+  point[i].setAttribute("cy", posy());  
+  positiony[data.nodes[i].id] = point[i].getAttribute("cy"); 
+  point[i].setAttribute("r", "5");  
+  point[i].setAttribute("fill", clr(i));  
+}
+
+for (var i = 0; i < 100; i++){
+  for (var p = 0; p < data.nodes.length; p++){
+    var dx = 0;
+    var dy = 0;
+    var idp = data.nodes[p].id;
+    for (var q = 0; q < data.nodes.length; q++) {
+      if (q == p) continue;
+      var idq = data.nodes[q].id;
+      var xx = parseFloat(parseFloat(positionx[idp]) - parseFloat(positionx[idq]));
+      var yy = parseFloat(parseFloat(positiony[idp]) - parseFloat(positiony[idq]));
+      var d = Math.sqrt(parseFloat(parseFloat(xx*xx) + parseFloat(yy*yy)));
+      if (d == 0) d = 0.01;
+      var fc = (1.2 / Math.sqrt(d)) / d;
+      var dx = parseFloat(parseFloat(dx) + parseFloat(positionx[idp]-positionx[idq])*fc);
+      var dy = parseFloat(parseFloat(dy) + parseFloat(positiony[idp]-positiony[idq])*fc);
+    }
+    for (var q = 0; q < data.links.length; q++) {
+      var idq = data.links[q].source;
+      if (idq == idp) {
+        var idd = data.links[q].target;
+        var xx = parseFloat(parseFloat(positionx[idp]) - parseFloat(positionx[idd]));
+        var yy = parseFloat(parseFloat(positiony[idp]) - parseFloat(positiony[idd]));
+        var d = Math.sqrt(parseFloat(parseFloat(xx*xx) + parseFloat(yy*yy)));
+        if (d == 0) d = 0.01;
+        var fc = Math.log(parseInt(data.links[q].value + 1) * d) / d;
+        var dx = parseFloat(parseFloat(dx) - parseFloat(positionx[idp]-positionx[idd])*fc);
+        var dy = parseFloat(parseFloat(dy) - parseFloat(positiony[idp]-positiony[idd])*fc);
+      }
+      var idq = data.links[q].target;
+      if (idq == idp) {
+        var idd = data.links[q].source;
+        var xx = parseFloat(parseFloat(positionx[idp]) - parseFloat(positionx[idd]));
+        var yy = parseFloat(parseFloat(positiony[idp]) - parseFloat(positiony[idd]));
+        var d = Math.sqrt(parseFloat(parseFloat(xx*xx) + parseFloat(yy*yy)));
+        if (d == 0) d = 0.01;
+        var fc = Math.log(parseInt(data.links[q].value + 1) * d) / d;
+        var dx = parseFloat(parseFloat(dx) - parseFloat(positionx[idp]-positionx[idd])*fc);
+        var dy = parseFloat(parseFloat(dy) - parseFloat(positiony[idp]-positiony[idd])*fc);
+      }  
+    }
+    point[p].setAttribute("cx", "0");
+    point[p].setAttribute("cx", newposx(dx)); 
+    positionx[idp] = point[p].getAttribute("cx");
+    point[p].setAttribute("cy", "0");
+    point[p].setAttribute("cy", newposy(dy));  
+    positiony[idp] = point[p].getAttribute("cy"); 
+  }
+}
+
+for (var r = 0; r < data.links.length; r++){ 
+    line[r] = document.createElementNS("http://www.w3.org/2000/svg", "line"); 
+    line[r].setAttribute("x1", positionx[data.links[r].source]);
+    line[r].setAttribute("y1", positiony[data.links[r].source]);
+    line[r].setAttribute("x2", positionx[data.links[r].target]);
+    line[r].setAttribute("y2", positiony[data.links[r].target]);
+    line[r].setAttribute("stroke", "rgb(194,194,194)");
+    line[r].setAttribute("stroke-width", "1");
+    mySvg.appendChild(line[r]); 
+  }
+
+for (var p = 0; p < data.nodes.length; p++){
+    mySvg.appendChild(point[p]); 
+}
+
+</script>
