@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="readme-flare-imports.json"></script>
+<script src="assets/js/paper.js"></script>
+<script src="http://d3js.org/d3.v3.min.js"></script>
+
+</head>
+<body>
+	<canvas id="dataCanva" style="width:100%;height:100%"></canvas>
+	<script>
+	var canvas = document.getElementById('dataCanva');
+	paper.setup(canvas);
+	var centerX = 600, centerY = 335, R = 285, Rsmall = 282;
+	var nodes = packageHierarchy(classes);
+	var links = packageImports(nodes);
+	drawParents();
+	drawLinks();
+	drawNodes();
+
+function drawParents() {
+	var names = new Array();
+	var i = 0;
+	classes.forEach(function (d) {
+		names[i] = d.name;
+		i++;
+	});
+	drawFirst();
+	drawSecond();
+	drawThird();
+}
+
+function drawFirst() {
+	
+}
+
+function drawSecond() {
+
+}
+
+function drawThird() {
+
+}
+
+function drawLinks() {
+	var i = 0;
+	classes.forEach(function(d) {
+		var angle = i / classes.length;
+		nodes[d.name].x = getPosx(Rsmall, angle);
+		nodes[d.name].y = getPosy(Rsmall, angle);
+		i++;
+		nodes[d.name].paths = [];
+		nodes[d.name].paths.children = [];
+		nodes[d.name].paths.parent = [];
+	});
+	for (var i in links){
+		var path = new paper.Path.Line({
+			from: [nodes[links[i].source.name].x, nodes[links[i].source.name].y],
+			to: [nodes[links[i].target.name].x, nodes[links[i].target.name].y],
+			strokeColor: '#578cb8',
+			strokeWidth: 0.5
+		});
+		nodes[links[i].source.name].paths.children.push(path);
+		nodes[links[i].target.name].paths.parent.push(path);
+	}
+}
+
+function drawNodes() {
+	var i = 0;
+	classes.forEach(function(d) {
+ 		var angle = i / classes.length
+		var text = new paper.PointText;
+		text.rotate(angle * 360 - 90);
+		text.position = new paper.Point(getPosx(R, angle), getPosy(R, angle));
+		text.fillColor = 'grey';
+		text.fontSize = 7.5;
+		text.content = d.name.substring(d.name.lastIndexOf(".") + 1, d.name.length);
+		i++;
+		text.onMouseEnter = function(event) {
+			nodes[d.name].paths.children.forEach(function(pa){
+				pa.strokeColor = 'red';
+				pa.strokeWidth = 1;
+			});
+			nodes[d.name].paths.parent.forEach(function(pa){
+				pa.strokeColor = 'green';
+				pa.strokeWidth = 1;
+			});
+		}
+		text.onMouseLeave = function(event) {
+			nodes[d.name].paths.children.forEach(function(pa){
+				pa.strokeColor = '#578cb8';
+				pa.strokeWidth = 0.5;
+			});
+			nodes[d.name].paths.parent.forEach(function(pa){
+				pa.strokeColor = '#578cb8';
+				pa.strokeWidth = 0.5;
+			});
+		}
+	});
+}
+
+function getPosx(R, angle) {
+	return centerX + R * Math.sin(angle * 2 * Math.PI);
+}
+
+function getPosy(R, angle) {
+	return centerY - R * Math.cos(angle * 2 * Math.PI);
+}
+
+// Lazily construct the package hierarchy from class names.
+function packageHierarchy(classes) {
+  var map = {};
+
+  function find(name, data) {
+    var node = map[name], i;
+    if (!node) {
+      node = map[name] = data || {name: name, children: []};
+      if (name.length) {
+        node.parent = find(name.substring(0, i = name.lastIndexOf(".")));
+        node.parent.children.push(node);
+        node.key = name.substring(i + 1);
+      }
+    }
+    return node;
+  }
+
+  classes.forEach(function(d) {
+    find(d.name, d);
+  });
+
+  return map;
+}
+
+// Return a list of imports for the given array of nodes.
+function packageImports(nodes) {
+  var map = {},
+      imports = [];
+
+  // Compute a map from name to node.
+  for (var d in nodes) {
+    map[nodes[d].name] = nodes[d];
+  };
+
+  // For each import, construct a link from the source to target node.
+  for (var d in nodes) {
+    if (nodes[d].imports) nodes[d].imports.forEach(function(i) {
+      imports.push({source: map[nodes[d].name], target: map[i]});
+    });
+  };
+
+  return imports;
+}
+
+	</script>
+<script type="text/javascript">
+</script>
+</body>
+</html>

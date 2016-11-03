@@ -12,37 +12,37 @@
     mySvg.setAttribute("height",'100%'); 
     mySvg.setAttribute("width",'100%'); 
     container.appendChild(mySvg);
-
+  //set new SVG
   var color = ["#1f77b4", "#98df8a", "#aec7e8", "#ffbb78", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#c5b0d5", "#ff9896", "#8c564b"];
-
+  //set colors of 11 groups
   var point = new Array();
-
+  //the array of SVG objects of nodes in the graph
   var line = new Array();
-
+  //the array of SVG objects of links in the graph
   var positionx = new Array();
-
+  //the value of X-axis of nodes in the graph
   var positiony = new Array();
-
+  //the value of Y-axis of nodes in the graph
   function posx() {
     return parseInt(Math.random() * 200 + 650);
   }
-
+  //generate the random position of a new node (X-axis)
   function posy() {
     return parseInt(Math.random() * 200 + 400);
   }
-
+  //generate the random position of a new node (Y-axis)
   function clr(p) {
     return color[data.nodes[p].group];
   }
-
+  //return the color of the group
   function newposx(dx, idp) {
     return parseFloat(parseFloat(positionx[idp]) + parseFloat(dx));
   }
-
+  //return the new position of nodes (X-axis)
   function newposy(dy, idp) {
     return parseFloat(parseFloat(positiony[idp]) + parseFloat(dy));
   }
-
+  //return the new position of nodes (Y-axis)
   function Initialize(){
     for (var i = 0; i < data.nodes.length; i++){
       point[i] = document.createElementNS("http://www.w3.org/2000/svg", "circle");  
@@ -56,6 +56,7 @@
       point[i].setAttribute("stroke-width", "1");  
       mySvg.appendChild(point[i]); 
     }
+    //initialize the nodes and append them to the SVG
     for (var r = 0; r < data.links.length; r++){ 
       line[r] = document.createElementNS("http://www.w3.org/2000/svg", "line"); 
       line[r].setAttribute("x1", positionx[data.links[r].source]);
@@ -66,7 +67,7 @@
       line[r].setAttribute("stroke-width", "1");
       mySvg.appendChild(line[r]); 
     }
-    setTimeout(function() {PerformForce()},10);
+    //initialize the links and append them to the SVG
   }
 
   function CalculateDis(idp, idq) {
@@ -75,7 +76,7 @@
     var distance = Math.sqrt(parseFloat(parseFloat(xx*xx) + parseFloat(yy*yy)));
     return distance;
   }
-
+  //calculate the distance between two nodes
 
 
   function PerformForce(){
@@ -91,6 +92,7 @@
         var fc = (0.5 / Math.sqrt(d)) / d;
         var dx = dx + (positionx[idp]-positionx[idq])*fc;
         var dy = dy + (positiony[idp]-positiony[idq])*fc;
+        //calculate the repulsion force and the moved distance(dx, dy) of nodes
       }
       for (var q = 0; q < data.links.length; q++) {
         var idq = data.links[q].source;
@@ -111,6 +113,7 @@
           var dx = dx - (positionx[idp]-positionx[idd])*fc;
           var dy = dy - (positiony[idp]-positiony[idd])*fc;
         }  
+        //calculate the gravity force and the moved distance(dx, dy) of nodes
       }
       positionx[idp] = newposx(dx, idp);
       point[p].setAttribute("cx", "0");
@@ -118,6 +121,7 @@
       positiony[idp] = newposy(dy, idp);
       point[p].setAttribute("cy", "0");
       point[p].setAttribute("cy", positiony[idp]);   
+      //update the new position of nodes
     }
     for (var r = 0; r < data.links.length; r++){ 
       line[r].setAttribute("x1", positionx[data.links[r].source]);
@@ -127,6 +131,7 @@
       line[r].setAttribute("stroke", "rgb(194,194,194)");
       line[r].setAttribute("stroke-width", "1");
     }
+    //update the new links
     setTimeout(function() {PerformForce()},10);
   }
 
