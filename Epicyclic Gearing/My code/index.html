@@ -48,6 +48,34 @@
 			//gear1[i].add(new paper.Path.Line())
 		}
 	}
+
+	function plantet() {
+		gear1.forEach(function (d) {
+			d.onFrame = function (event) {
+				this.rotate(5, ctr);
+			}
+		});
+		gear2.forEach(function (d) {
+			d.forEach(function (dd) {
+				dd.onFrame = function (event) {
+					this.rotate(2.5);
+			}
+			});
+		});
+		gear3.forEach(function (d) {
+			d.onFrame = function (event) {
+				this.rotate(1);
+			}
+		});
+	}
+
+	function annulus() {
+
+	}
+
+	function sun() {
+		
+	}
 	</script>
 <script type="text/javascript">
 </script>
