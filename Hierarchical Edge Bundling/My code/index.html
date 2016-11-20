@@ -14,7 +14,7 @@
 	var centerX = 600, centerY = 335, R = 285, Rsmall = 282;
 	var nodes = packageHierarchy(classes);
 	var links = packageImports(nodes);
-	drawParents();
+//	drawParents();
 	drawLinks();
 	drawNodes();
 
@@ -31,15 +31,71 @@ function drawParents() {
 }
 
 function drawFirst() {
-	
+	var names1 = names;
+	var layer1 = new Array();
+	var i = 0;
+	names1.forEach(function(d) {
+		var cur = d.substring(0, d.indexOf("."));
+		d = d.substring(d.indexOf(".") + 1, d.length - 1);
+		if (i = 0) {
+			layer1[i] = cur;
+		}
+		else if (layer1[i] != cur) {
+			layer1[i + 1] = cur;
+		}
+		i++;
+	});
+	if (layer1.length = 1) {
+		nodes[layer1[0]].x = centerX;
+		nodes[layer1[0]].y = centerY;
+	}
+	else {
+		layer1.forEach(function(d) {
+			
+		});
+	}
 }
 
 function drawSecond() {
+	var names2 = names1;
+	var layer2 = new Array();
+	var i = 0;
+	names2.forEach(function (d) {
+		var cur = d.substring(0, d.indexOf("."));
+		d = d.substring(d.indexOf(".") + 1, d.length - 1);
+		if (i = 0) {
+			layer2[i] = cur;
+		}
+		else if (layer2[i] != cur) {
+			layer2[i + 1] = cur;
+		}
+		i++;
+	});
+	layer2.forEach(function(d) {
 
+	});
 }
 
 function drawThird() {
+	var names3 = names2;
+	var layer3 = new Array();
+	var i = 0;
+	names3.forEach(function (d) {
+		if (d.indexOf(".") != -1) {
+			var cur = d.substring(0, d.indexOf("."));
+			d = d.substring(d.indexOf(".") + 1, d.length - 1);
+			if (i = 0) {
+				layer3[i] = cur;
+			}
+			else if (layer3[i] != cur) {
+				layer3[i + 1] = cur;
+			}
+			i++;
+		}
+	});
+	layer3.forEach(function(d) {
 
+	});
 }
 
 function drawLinks() {

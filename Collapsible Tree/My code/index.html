@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="flare.json"></script>
+<script src="assets/js/paper.js"></script>
+
+</head>
+<body>
+	<canvas id="dataCanva" style="width:100%;height:100%"></canvas>
+	<script>
+	var canvas = document.getElementById('dataCanva');
+	paper.setup(canvas);
+	var tree = flare;
+	var depth = 1;
+	tree.depth = 0;
+	tree.x = 180;
+	tree.on = 1;
+	tree.children.forEach(function (d) {
+		d.parent = tree;
+	});
+	tree.children.forEach(setOff);
+	tree.children.forEach(createParent);
+	tree.children.forEach(getDepth);
+//	getPosition(tree);
+
+	function setOff(d) {
+		d.on = 0;
+		if (d.children) d.children.forEach(setOff);
+	}
+
+	function createParent(d) {
+		if (d.children) {
+			d.children.forEach(function(dd) {
+				dd.parent = d;
+			});
+			d.children.forEach(createParent);
+		}
+	}
+
+	function getDepth(d) {
+		d.depth = d.parent.depth + 1;
+		d.x = 180 * (d.depth + 1);
+		if (d.children) {
+			d.children.forEach(getDepth);
+		}
+	}
+
+	function getPosition(d) {
+		if (d.children && d.on == 1) {
+//			d.y = (getPosition(d.children[0]) + getPosition(d.children[d.children.length - 1])) / 2;
+			d.children.forEach(getPosition);
+			d.y = (d.children[0].y + d.children[d.children.length - 1].y) / 2;
+		}
+		else {
+			if (d.parent.children[0] == d) {
+
+			}
+			else {
+
+			}
+		}
+	}
+	</script>
+<script type="text/javascript">
+</script>
+</body>
+</html>
