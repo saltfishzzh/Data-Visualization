@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+	#slider {
+		height:15px;width:287px;
+		border:1px solid #000000;
+		position:relative;
+	}
+	#sliderLeft {
+		height:13px; 
+		width:13px;
+		float:left;
+		border:1px solid #cccccc;
+		cursor:pointer;
+	}
+	#sliderBlock {
+		height:13px;
+		width:50px;
+		border:1px solid #cccccc;
+		position:absolute;
+		top:0;
+		left:13px;
+		cursor:pointer;
+		background:#cccccc;
+		text-align:center;
+	}
+	#sliderRight {
+		height:13px;
+		width:13px;
+		float:right;
+		border:1px solid #cccccc;
+		cursor:pointer;
+	}
+	</style>
+	<script src="slider.js"></script>
+	<script src="nations.json"></script>
+	<script src="scatterplot.js"></script>
+
+	<h3>Draggable scatterplot with motion trails</h3>
+	<p></p>
+	<div id="slider">
+	<span id="sliderLeft" ><</span>
+	<span id="sliderRight">></span>
+	<span id="sliderBlock">==</span>
+
+
+</head>
+<body>
+	<svg id="scatterplot" width="10000" height="1000"></svg>
+	<script>
+	setColor();
+	var sd = new Slider(function(p) {
+		document.getElementById("sliderBlock").innerHTML = p + 1800;
+		setYear(p + 1800);
+	})
+
+	</script>
+
+</body>
+</html>

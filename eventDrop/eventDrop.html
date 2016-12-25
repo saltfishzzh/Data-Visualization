@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<style>
+	#slider {
+		height:15px;width:278px;
+		border:1px solid #000000;
+		position: relative;
+	}
+	#slider2 {
+		height:15px;width:278px;
+		border:1px solid #000000;
+		position: relative;
+	}
+	#sliderLeft {
+		height:13px; 
+		width:13px;
+		float:left;
+		border:1px solid #cccccc;
+		cursor:pointer;
+		user-select: none;
+	}
+	#sliderBlock, #sliderBlock2 {
+		height:13px;
+		width:50px;
+		border:1px solid #cccccc;
+		position:absolute;
+		top:0;
+		left:113px;
+		cursor:pointer;
+		background:#cccccc;
+		text-align:center;
+		user-select: none;
+	}
+	#sliderRight {
+		height:13px;
+		width:13px;
+		float:right;
+		border:1px solid #cccccc;
+		cursor:pointer;
+		user-select: none;
+	}
+	#slider-row {
+		height:278px;width:15px;
+		border:1px solid #000000;
+		position: relative;
+		user-select: none;
+	}
+	.unselect {
+		user-select: none;
+	}
+	</style>
+	<title>EventDrop></title>
+	<script src="randomlyGetData.js"></script>
+	<script src="scaler.js"></script>
+	
+	<script src="slider.js"></script>
+	<div id="slider">left-right
+	<span id="sliderLeft" ><</span>
+	<span id="sliderRight">></span>
+	<span id="sliderBlock">==</span></div>
+	<div id="slider">zoom
+	<span id="sliderLeft" ><</span>
+	<span id="sliderRight">></span>
+	<span id="sliderBlock2">==</span></div>
+
+
+</head>
+<body>
+	<svg id="EventDrop" width=800 height=400 left=0 up=0></svg>
+	
+	<script src="EventDrop.js"></script>
+	<script src="scaler.js"></script>
+	<script>
+	// console.log(document.getElementById("EventDrop"));
+	var sd1 = new Slider(1, function(p) {
+		p = p / 100;
+		setVision((p - 0.5) * 3);
+	})
+	var sd2 = new Slider(2, function(p) {
+		p = p / 100;
+		if (p > 0.5) setZoom((p-0.5)*3+1);
+		else setZoom(p+0.5);
+	})
+	</script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

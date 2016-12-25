@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC '-//W3C//DTD XHTML 1.0 Strict//EN' 
+   'http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd'>
+<html xmlns='http://www.w3.org/1999/xhtml' lang='en' xml:lang='en'>
+<head>
+<title>Word Cloud</title>
+
+<!-- meta data -->
+<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+
+<!-- styles -->
+<link href='styles.css' type='text/css' rel='stylesheet' />
+
+<!-- scripts -->
+<script type='text/javascript' src='mathematics.js'></script>
+<script type='text/javascript' src='colorful.js'></script>
+<script type='text/javascript' src='word_cloud.js'></script>
+<script type='text/javascript'>
+var update_cloud = function ()
+{
+	var input = $('input').value;
+	var wordCloud = new word_cloud();
+	var words = [];
+
+	input = input.replace(/[\s]+/gm, ' ');
+	input = input.split(' ');
+
+	for (var i in input)
+	{
+		if (input[i] == ' ' || input[i] == '') {continue;}
+		if (words[input[i]]) {words[input[i]]++;}
+		else {words[input[i]] = 1;}
+	}
+	
+	$('word_cloud').innerHTML = '';
+	wordCloud.addWords(words);
+	wordCloud.render();
+}
+
+var small_cloud = function ()
+{
+	var wordCloud = new word_cloud();
+	var words = [];
+	words['apple'] = 20;
+	words['banana'] = 10;
+	words['orange'] = 2;
+	words['grape'] = 17;
+	words['peach'] = 18;
+	wordCloud.addWords(words);
+	wordCloud.render();
+	wordCloud.addWords(words);
+	wordCloud.render();
+	wordCloud.addWords(words);
+	wordCloud.render();
+	wordCloud.addWords(words);
+	wordCloud.render();
+}
+
+window.onload = function ()
+{
+	update_cloud();
+}
+</script>
+
+</head>
+<body>
+
+<div id='wrapper'>
+	<textarea id="input" rows="4" cols="50" onchange="update_cloud()"></textarea>
+
+	<div id="word_cloud">
+	</div>
+
+</div><!-- end wrapper -->
+
+</body>
+</html>

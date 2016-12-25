@@ -1,0 +1,7 @@
+#word_cloud {
+	width: 300px;
+}
+
+span.word_cloud sup {
+	font-size: 10px;
+}
